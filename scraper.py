@@ -1,4 +1,4 @@
-### script to pull income statement data from HTML tags on Yahoo! Finance and store it for use in an Excel model.
+### script to pull income statement data from HTML tags on (WSJ Markets? Use something with free 5+ year data) Yahoo! Finance and store it for use in valuation.
 
 from datetime import datetime
 import lxml
