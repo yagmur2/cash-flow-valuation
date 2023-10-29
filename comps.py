@@ -4,12 +4,11 @@
 # into EITHER the Excel model, the scraper script, or both. AFTER trimming peer group and
 # storing average variables, THEN run the rest of the scripts for each company.
 
-#https://finance.yahoo.com/screener/predefined/sec-ind_ind-largest-equities_software-infrastructure
+# https://finance.yahoo.com/screener/predefined/sec-ind_ind-largest-equities_software-infrastructure
 
 # Import Tkinter for GUI, ttk for Combobox
 from tkinter import *
 from tkinter import ttk
-
 
 # Create list of sectors, and each sector's contained industries
 sectors = ['Technology', 'Financial Services', 'Consumer Cyclical', 'Healthcare', 'Industrials', 'Communication Services', 'Consumer Defensive', 'Energy', 'Basic Materials', 'Real Estate', 'Utilities']
@@ -26,67 +25,91 @@ estate_inds = ['']
 utils_inds = ['']
 industries = [tech_inds, fin_inds, cyclic_inds, health_inds, indust_inds, comm_inds, defense_inds, energy_inds, mater_inds, estate_inds, utils_inds]
 
+# Target sector and industry variables
+target_sector = ''
+target_industry = ''
+
+# Number of companies to include in industry group for valuation
+peersize = 20
+
+# Include companies within this many std. dev. of group's median P/E ratio
+range_factor = 3
+
 # Create a dictionary assigning each sector to a list of its industries
 paired = dict(zip(sectors, industries))
 
 # Initialize GUI window
-secwindow = Tk()
-secwindow.title('Comps Industry')
-secwindow.geometry('500x250')
-ttk.Label(secwindow, text = 'Sector selection')
+window = Tk()
+window.title('Comps Inputs')
+window.geometry('500x250')
+ttk.Label(window, text = 'Sector/Industry Selection')
 
-# Target sector and industry variables
-target_sector = 'Technology'
-target_industry = ''
-
-# Check current value of sectorbox and assign to global variable target_sector
-def check_sbox(event):
-    global target_sector
-    target_sector = sectorbox.get()
-
-# Check current value of industrybox and assign to global variable target_industry
+# Updates industry data to correspond to the sector chosen
+# Checks current value of industrybox and assigns to global variable target_industry
 def check_ibox(event):
     global target_industry
+    industrybox['values'] = paired[sectorbox.get()]
     target_industry = industrybox.get()
 
-def print_sector():#DEBUG
+# Updates industry data to correspond to the sector chosen
+# Checks current value of sectorbox and assigns to global variable target_sector
+def check_sbox(event):
+    global target_sector
+    industrybox['values'] = paired[sectorbox.get()]
+    target_sector = sectorbox.get()
+
+# Checks user input for industry peer group size. Only accepts integers greater than zero.
+def check_peerbox():
+    global peersize
+    
+    # tries to convert input to int
+    try: 
+        # if it converts and is > 0, sets peer size
+        if int(peerbox.get()) > 0:
+            peersize = int(peerbox.get())
+        # otherwise is nonzero
+        else: print('ERROR: Must be a nonzero integer')
+
+    # if input can't be changed to int, invalid
+    except: print('ERROR: Must be a nonzero integer')
+
+    print(peersize)#DEBUG
+
+#-----------------------------DEBUG ASSISTANCE----------------------------
+def print_sector():
     print(target_sector)
 
-def print_industry():#DEBUG
+sec_butt= Button(window, text="(DEBUG) Print sector", command=print_sector)
+
+def print_industry():
     print(target_industry)
 
-# Create Combobox for sector selection
-sector_choices = sectors
-variable = StringVar(secwindow)
-variable.set('Technology')
-sectorbox = ttk.Combobox(secwindow, values = sector_choices)
-sectorbox.bind('<<ComboboxSelected>>', check_sbox)
-sec_butt= Button(secwindow, text="Print sector", command=print_sector)
-sec_butt.pack()
-sectorbox.pack(); secwindow.mainloop()
+ind_butt = Button(window, text="(DEBUG) Print industry", command=print_industry)
+#------------------------------------------------------------------------
 
-# Initialize GUI window
-indwindow = Tk()
-indwindow.title('Comps Industry')
-indwindow.geometry('500x250')
-ttk.Label(indwindow, text = 'Sector selection')
+# Create Combobox for industry selection
+industrybox = ttk.Combobox(window)
 
-# Create Combobox for industry selection, with choices from chosen sector's paired industries
-#industry_choices = paired[sectorbox.get()]
-industry_choices = paired[target_sector]
-industrybox = ttk.Combobox(indwindow, values = industry_choices, textvariable=variable)
+# When industry is selected, run check_ibox method to assign target_industry
 industrybox.bind('<<ComboboxSelected>>', check_ibox)
-ind_butt = Button(indwindow, text="Print industry", command=print_industry)
-ind_butt.pack()
-industrybox.pack(); indwindow.mainloop()
+
+# Create Combobox for sector selection, with values set as dict keys
+sectorbox = ttk.Combobox(window, values = list(paired.keys()))
+
+# When sector is selected, run check_sbox method to assign target_sector
+sectorbox.bind('<<ComboboxSelected>>', check_sbox)
+
+peerbox = ttk.Entry(window, width=25)
+peer_butt = Button(window, text = 'Confirm Inputs', command=check_peerbox)
+
+
+sectorbox.pack(); sec_butt.pack(); industrybox.pack(); ind_butt.pack(); peerbox.pack(); peer_butt.pack(); window.mainloop()
 
 # INPUTS
 
-# Target industry
-# 
+# (DONE) Target industry
 
-# Number of companies to include in industry group for valuation
-# peers = 20
+# (DONE) Number of companies to include in industry group for valuation
 
 # Include companies within this many std. dev. of group's median P/E ratio
 # range_factor = 3
