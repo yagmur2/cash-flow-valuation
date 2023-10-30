@@ -14,15 +14,15 @@ from tkinter import ttk
 sectors = ['Technology', 'Financial Services', 'Consumer Cyclical', 'Healthcare', 'Industrials', 'Communication Services', 'Consumer Defensive', 'Energy', 'Basic Materials', 'Real Estate', 'Utilities']
 tech_inds = ['Software - Infrastructure', 'Semiconductors', 'Consumer Electronics', 'Software - Application', 'Information Technology Services', 'Semiconductor Equipment & Materials', 'Communication Equipment', 'Electronic Components', 'Computer Hardware', 'Scientific & Technical Instruments', 'Solar', 'Electronics & Computer Distribution']
 fin_inds = ['Banks - Regional', 'Banks - Diversified', 'Insurance - Diversified', 'Credit Services', 'Asset Management', 'Insurance - Life', 'Capital Markets', 'Financial Data & Stock Exchanges', 'Insurance - Property & Casualty', 'Insurance Brokers', 'Insurance - Reinsurance', 'Insurance - Specialty', 'Shell Companies', 'Mortgage Finance', 'Financial Conglomerates']
-cyclic_inds = ['']
-health_inds = ['']
-indust_inds = ['']
-comm_inds = ['']
-defense_inds = ['']
-energy_inds = ['']
-mater_inds = ['']
-estate_inds = ['']
-utils_inds = ['']
+cyclic_inds = ['Internet Retail','Auto Manufacturers', 'Luxury Goods', 'Restaurants', 'Home Improvement Retail','Apparel Retail','Auto Parts','Specialty Retail', 'Travel Services','Footwear & Accessories', 'Leisure', 'Residential Construction','Resorts & Casinos', 'Lodging', 'Packaging & Containers', 'Gambling', 'Furnishings, Fixtures, & Appliances', 'Department Stores', 'Apparel Manufacturing', 'Auto & Truck Dealerships', 'Personal Services', 'Recreational Vehicles', 'Textile Manufacturing']
+health_inds = ['Drug Manufacturers - General', 'Biotechnology', 'Healthcare Plans', 'Medical Devices', 'Diagnostics & Research', 'Medical Instruments & Supplies', 'Drug Manufacturers - Specialty & Generic','Medical Care Facilities', 'Medical Distribution', 'Health Information Services', 'Pharmaceutical Retailers']
+indust_inds = ['Specialty Industrial Machinery', 'Aerospace & Defense', 'Conglomerates', 'Railroads', 'Farm & Heavy Construction Machinery', 'Specialty Business Services', 'Engineering & Construction', 'Integrated Freight & Logistics', 'Building Products & Equipment', 'Electrical Equipment & Parts', 'Staffing & Employment Services', 'Airlines', 'Waste Management', 'Marine Shipping', 'Industrial Distribution', 'Rental & Leasing Services', 'Consulting Services', 'Airports & Air Services', 'Tools & Accessories', 'Trucking', 'Infrastructure Operations', 'Security & Protection Services', 'Pollution & Treatment Controls', 'Metal Fabrication', 'Business Equipment & Supplies']
+comm_inds = ['Internet Content & Information', 'Telecom Services', 'Entertainment', 'Electronic Gaming & Multimedia', 'Advertising Agencies', 'Publishing', 'Broadcasting']
+defense_inds = ['Household & Personal Products', 'Packaged Foods', 'Discount Stores', 'Beverages - Non-Alcoholic', 'Beverages - Brewers', 'Tobacco', 'Grocery Stores', 'Beverages - Wineries & Distilleries', 'Confectioners', 'Farm Products', 'Food Distribution', 'Education & Training Services']
+energy_inds = ['Oil & Gas Integrated', 'Oil & Gas E&P', 'Oil & Gas Midstream', 'Oil & Gas Refining & Marketing', 'Oil & Gas Equipment & Services', 'Thermal Coal', 'Uranium', 'Oil & Gas Drilling']
+mater_inds = ['Specialty Chemicals', 'Other Industrial Metals & Mining', 'Gold', 'Building Materials', 'Steel', 'Chemicals', 'Copper', 'Agricultural Inputs', 'Paper & Paper Products', 'Aluminum' ,'Other Precious Metals & Mining', 'Lumber & Wood Production', 'Coking Coal', 'Silver']
+estate_inds = ['Real Estate Services', 'REIT - Specialty', 'REIT - Industrial', 'REIT - Retail', 'Real Estate - Development', 'REIT - Residential', 'Real Estate - Diversified', 'REIT - Diversified', 'REIT - Healthcare Facilities', 'REIT - Office', 'REIT - Mortgage', 'REIT - Hotel & Motel']
+utils_inds = ['Utilities - Regulated Electric', 'Utilities - Diversified', 'Utilities - Renewable', 'Utilities - Regulated Gas', 'Utilities - Independent Power Producers', 'Utilities - Regulated Water']
 industries = [tech_inds, fin_inds, cyclic_inds, health_inds, indust_inds, comm_inds, defense_inds, energy_inds, mater_inds, estate_inds, utils_inds]
 
 # Target sector and industry variables
@@ -113,4 +113,8 @@ sectorbox.pack(); sec_butt.pack(); industrybox.pack(); ind_butt.pack(); peerbox.
 
 # Include companies within this many std. dev. of group's median P/E ratio
 # range_factor = 3
+
+# OUTPUTS
+
+# List of company tickers
 
