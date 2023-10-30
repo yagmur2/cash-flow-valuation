@@ -7,7 +7,8 @@
 # https://finance.yahoo.com/screener/predefined/sec-ind_ind-largest-equities_software-infrastructure
 
 # Import Tkinter for GUI, ttk for Combobox
-from tkinter import *
+import customtkinter as ctk
+import tkinter as tk
 from tkinter import ttk
 
 # Create list of sectors, and each sector's contained industries
@@ -39,10 +40,9 @@ range_factor = 3
 paired = dict(zip(sectors, industries))
 
 # Initialize GUI window
-window = Tk()
+window = ctk.CTk()
 window.title('Comps Inputs')
 window.geometry('500x250')
-ttk.Label(window, text = 'Sector/Industry Selection')
 
 # Updates industry data to correspond to the sector chosen
 # Checks current value of industrybox and assigns to global variable target_industry
@@ -61,7 +61,7 @@ def check_sbox(event):
 # Checks user input for industry peer group size. Only accepts integers greater than zero.
 def check_peerbox():
     global peersize
-    
+
     # tries to convert input to int
     try: 
         # if it converts and is > 0, sets peer size
@@ -74,36 +74,68 @@ def check_peerbox():
     except: print('ERROR: Must be a nonzero integer')
 
     print(peersize)#DEBUG
+    window.destroy()
+
+def check_rangebox():
+    global range_factor
+
+    # tries to convert input to int
+    try: 
+        # if it converts and is > 0, sets peer size
+        if int(rangebox.get()) > 0:
+            range_factor = int(rangebox.get())
+        # otherwise is nonzero
+        else: print('ERROR: Must be a nonzero integer')
+
+    # if input can't be changed to int, invalid
+    except: print('ERROR: Must be a nonzero integer')
+
+    print(range_factor)#DEBUG
+    window2.destroy()
 
 #-----------------------------DEBUG ASSISTANCE----------------------------
 def print_sector():
     print(target_sector)
 
-sec_butt= Button(window, text="(DEBUG) Print sector", command=print_sector)
+sec_butt= ctk.CTkButton(window, text="(DEBUG) Print sector", command=print_sector)
 
 def print_industry():
     print(target_industry)
 
-ind_butt = Button(window, text="(DEBUG) Print industry", command=print_industry)
+ind_butt = ctk.CTkButton(window, text="(DEBUG) Print industry", command=print_industry)
 #------------------------------------------------------------------------
 
+#--------------------------------Industry Selection----------------------
 # Create Combobox for industry selection
-industrybox = ttk.Combobox(window)
+industrybox = ttk.Combobox(window, justify='center')
 
 # When industry is selected, run check_ibox method to assign target_industry
 industrybox.bind('<<ComboboxSelected>>', check_ibox)
 
 # Create Combobox for sector selection, with values set as dict keys
-sectorbox = ttk.Combobox(window, values = list(paired.keys()))
+sectorbox = ttk.Combobox(window, values = list(paired.keys()), justify='center')
 
 # When sector is selected, run check_sbox method to assign target_sector
 sectorbox.bind('<<ComboboxSelected>>', check_sbox)
 
-peerbox = ttk.Entry(window, width=25)
-peer_butt = Button(window, text = 'Confirm Inputs', command=check_peerbox)
-
+# Create sample size entry field
+peerbox = ttk.Entry(window, width=24, textvariable = str(peersize), justify='center')
+peerbox.insert(0, str(peersize))
+peer_butt = ctk.CTkButton(window, text = 'Confirm Inputs', command=check_peerbox)
 
 sectorbox.pack(); sec_butt.pack(); industrybox.pack(); ind_butt.pack(); peerbox.pack(); peer_butt.pack(); window.mainloop()
+#-------------------------------------------------------------------------
+
+# Create 2nd window
+window2 = ctk.CTk()
+window2.title("Raw Sample Analysis")
+window2.geometry('500x500')
+
+# Create entry field for P/E std. dev. range and button to validate input
+rangebox = ttk.Entry(window2, width=24, textvariable=str(range_factor), justify='center')
+range_butt = ctk.CTkButton(window2, text = 'Confirm P/E range', command = check_rangebox)
+rangebox.pack(); range_butt.pack(); window2.mainloop()
+
 
 # INPUTS
 
