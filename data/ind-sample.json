@@ -1,0 +1,22 @@
+{
+    "QCOM": {
+        "comps": 1,
+        "EBIT": 1,
+        "EBITDA": 1
+    },
+    "AMD": {
+        "comps": 1,
+        "EBIT": 1,
+        "EBITDA": 1
+    },
+    "AMAT": {
+        "comps": 1,
+        "EBIT": 1,
+        "EBITDA": 1
+    },
+    "TSM": {
+        "comps": 1,
+        "EBIT": 1,
+        "EBITDA": 1
+    }
+}
