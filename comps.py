@@ -26,6 +26,9 @@ estate_inds = ['Real Estate Services', 'REIT - Specialty', 'REIT - Industrial', 
 utils_inds = ['Utilities - Regulated Electric', 'Utilities - Diversified', 'Utilities - Renewable', 'Utilities - Regulated Gas', 'Utilities - Independent Power Producers', 'Utilities - Regulated Water']
 industries = [tech_inds, fin_inds, cyclic_inds, health_inds, indust_inds, comm_inds, defense_inds, energy_inds, mater_inds, estate_inds, utils_inds]
 
+# Create a dictionary assigning each sector to a list of its industries
+paired = dict(zip(sectors, industries))
+
 # Target sector and industry variables
 target_sector = ''
 target_industry = ''
@@ -35,9 +38,6 @@ peersize = 20
 
 # Include companies within this many std. dev. of group's median P/E ratio
 range_factor = 3
-
-# Create a dictionary assigning each sector to a list of its industries
-paired = dict(zip(sectors, industries))
 
 # Initialize GUI window
 window = ctk.CTk()
@@ -76,6 +76,7 @@ def check_peerbox():
     print(peersize)#DEBUG
     window.destroy()
 
+# Checks user input for sample P/E std. dev. Only accepts integers greater than zero.
 def check_rangebox():
     global range_factor
 
@@ -119,7 +120,7 @@ sectorbox = ttk.Combobox(window, values = list(paired.keys()), justify='center')
 sectorbox.bind('<<ComboboxSelected>>', check_sbox)
 
 # Create sample size entry field
-peerbox = ttk.Entry(window, width=24, textvariable = str(peersize), justify='center')
+peerbox = ttk.Entry(window, width=24, justify='center')
 peerbox.insert(0, str(peersize))
 peer_butt = ctk.CTkButton(window, text = 'Confirm Inputs', command=check_peerbox)
 
@@ -132,21 +133,23 @@ window2.title("Raw Sample Analysis")
 window2.geometry('500x500')
 
 # Create entry field for P/E std. dev. range and button to validate input
-rangebox = ttk.Entry(window2, width=24, textvariable=str(range_factor), justify='center')
+rangebox = ttk.Entry(window2, width=24, justify='center')
+rangebox.insert(0, str(range_factor))
 range_butt = ctk.CTkButton(window2, text = 'Confirm P/E range', command = check_rangebox)
+
 rangebox.pack(); range_butt.pack(); window2.mainloop()
 
+def industryURL():
+    global target_sector
+    global target_industry
 
-# INPUTS
+    for c in target_sector :
+        print(True)
 
-# (DONE) Target industry
 
-# (DONE) Number of companies to include in industry group for valuation
-
-# Include companies within this many std. dev. of group's median P/E ratio
-# range_factor = 3
 
 # OUTPUTS
 
-# List of company tickers
+# List of company tickers in ind-sample.json
+
 
