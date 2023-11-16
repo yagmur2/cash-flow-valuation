@@ -4,56 +4,75 @@ from datetime import datetime
 import lxml
 from lxml import html
 import requests
-import numpy as np
+import numpy_financial as np
 import pandas as pd
+import yfinance as yf
 
-### set up request headers to simulate browser request
+# Forecast length
+years = 5
+n = 1
+print('Short-term forecast length: ' + str(years) + ' years' + '\n')
 
-headers = {
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
-    'Accept-Encoding': 'gzip, deflate, br',
-    'Accept-Language': 'en-US,en;q=0.9',
-    'Cache-Control': 'max-age=0',
-    'Connection': 'close',
-    'DNT': '1', # Do Not Track Request Header 
-    'Pragma': 'no-cache',
-    'Referrer': 'https://google.com',
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36'
-}
+# Long term growth rate
+lg = .02
+print('Terminal growth rate: ' + str(lg) + '\n')
 
-### select target company to evaluate and get its statement URLs
+# stock currently examined TODO: make dynamic from list in ind-sample.json
+peer = yf.Ticker("MSFT")
+price = peer.history()['Close'].iloc[-1]
 
-symbol =  'CRSP'
-print(symbol)#DEBUG
+# WACC inputs TODO: make beta and any other retrievables dynamic
 
-fin_url = f'https://finance.yahoo.com/quote/{symbol}/financials?p={symbol}'
-cf_url = f'https://finance.yahoo.com/quote/{symbol}/cash-flow?p={symbol}'
-print(fin_url)#DEBUG
-print (cf_url)#DEBUG
+# Risk-free rate
+rf = .04
+# Beta of stock
+beta = 1.1
+# Expected return of market
+rm = .1
+# Weight of equity for company
+pct_eq = .8
+# Weight of liabilities for company
+pct_debt = 1 - pct_eq
+# Cost of equity
+cost_eq = rf + beta * (rm - rf)
+# Cost of debt
+cost_debt = .1
+# Tax rate
+tax = .2
+# Weighted average cost of capital (Discount rate)
+wacc = pct_eq * cost_eq + pct_debt * cost_debt * (1 - tax)
+print('WACC/Discount rate: ' + str(wacc) + '\n')
 
-### find target company income statements
+# take fcf column and reverse dates
+fcf = peer.cashflow.iloc[0]
+fcf = fcf[::-1]
+print('Free cash flows for past 5 years of ' + str(peer) + ': \n' + str(fcf) + '\n')
 
-# fetch the page
-fin_page = requests.get(fin_url, headers=headers)
-print(fin_page)#DEBUG
+# short term growth rate
+sg = fcf.pct_change()
+sg = sg.fillna(0).tolist()
+sg = sum(sg)/4
+print('Short term growth rate: ' + str(sg) + '\n')
 
-# parse the page with lxml
-fin_tree = html.fromstring(fin_page.content)
-print(fin_tree)#DEBUG
+# Calculate short-term cash flow forecasts
+future_fcf = [0] * years
+future_fcf[0] = fcf[-1] * (1 + sg)
+while n < years :
+    future_fcf[n] = future_fcf[n - 1] * (1 + sg)
+    n += 1
+print('Short term forecasted cash flows: ' + str(future_fcf) + '\n')
 
-fin_tree.xpath("//h1/text()")
+# Calculate perpetuity and add to previous cash flows
+tv = (future_fcf[-1] * (1 + lg))/(wacc - lg)
+print('Terminal value: ' + str(tv) + '\n')
 
-### find target company cash flows
+valuation = np.npv(wacc, future_fcf) + np.pv(wacc, 1, 0, tv)
+print('Market cap valuation: ' + str(valuation) + '\n')
 
-# fetch the page
-cf_page = requests.get(cf_url, headers=headers)
-print(cf_page)#DEBUG
-
-# parse the page with lxml
-cf_tree = html.fromstring(cf_page.content)
-print(cf_tree)#DEBUG
-
-cf_tree.xpath("//h1/text()")
+# Create verdict
+if valuation < peer.fast_info['market_cap'] :
+    print('Overvalued')
+else : print('Undervalued')
 
 ### store enterprise value, cash flows, EBIT (net income + interest + tax), EBITDA (EBIT + depreciation + amortization), and industry
 
